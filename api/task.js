@@ -10,7 +10,7 @@ module.exports = app => {
             .where('estimateAt', '<=', date)
             .orderBy('estimateAt')
             .then(tasks => res.json(tasks))
-            .catch(err => res.status(500).json(err))
+            .catch(err => res.status(400).json(err))
     }
 
     const save = (req, res) => {
@@ -30,11 +30,11 @@ module.exports = app => {
         app.db(tasks)
             .where({ id: req.params.id, userId: req.user.id })
             .del()
-            .then(rowDeleted => {
-                if (rowDeleted > 0) {
+            .then(rowsDeleted => {
+                if (rowsDeleted > 0) {
                     res.status(204).send()
                 } else {
-                    const msg = `Não foi encontrada task com o id ${req.params.id}`
+                    const msg = `Não foi encontrada task com o id ${req.params.id}.`
                     res.status(400).send(msg)
                 }
             })
